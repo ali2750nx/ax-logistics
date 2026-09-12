@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AX Logistics LLC — Truck Dispatch Services</title>
+<meta name="description" content="AX Logistics LLC provides 24/7 truck dispatch services for owner-operators and small fleets: load booking, rate negotiation, paperwork, and real-time tracking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+    --asphalt:#12151a;
+    --asphalt-2:#1a1e26;
+    --steel:#262b35;
+    --steel-line:#3a4150;
+    --paper:#eef0f2;
+    --paper-dim:#aab0bd;
+    --orange:#2f7de1;
+    --orange-dim:#6aa3ec;
+    --yellow:#9fb8d9;
+    --green:#3ddc84;
+    --radius:2px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--asphalt);
+    color:var(--paper);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{
+    font-family:'Oswald', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    line-height:1.08;
+  }
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px;}
+  ::selection{background:var(--orange); color:var(--asphalt);}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- Route divider motif ---------- */
+  .route-rule{
+    display:flex; align-items:center; gap:10px;
+    color:var(--paper-dim);
+  }
+  .route-rule .dot{width:6px; height:6px; border-radius:50%; background:var(--orange); flex:none;}
+  .route-rule .line{flex:1; height:1px; background:repeating-linear-gradient(90deg, var(--steel-line) 0 6px, transparent 6px 12px);}
+
+  /* ---------- Header ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(18,21,26,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--steel-line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px; max-width:1180px; margin:0 auto;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Oswald', sans-serif; font-weight:700; font-size:20px;
+    letter-spacing:0.03em; text-transform:uppercase;
+  }
+  .logo .mark{
+    width:30px; height:30px; background:var(--orange);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--asphalt); font-weight:700; font-size:15px;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+  }
+  .logo .sub{color:var(--orange-dim); font-family:'Inter'; font-weight:600; font-size:10px; letter-spacing:0.15em; display:block; margin-top:1px;}
+  nav.links{display:flex; gap:32px; font-size:14px; font-weight:500;}
+  nav.links a{color:var(--paper-dim); transition:color .2s;}
+  nav.links a:hover{color:var(--orange-dim);}
+  .nav-right{display:flex; align-items:center; gap:18px;}
+  .phone-pill{
+    display:flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono'; font-size:13px; font-weight:500;
+    color:var(--paper); border:1px solid var(--steel-line); padding:8px 14px; border-radius:var(--radius);
+  }
+  .phone-pill .pulse{width:7px; height:7px; border-radius:50%; background:var(--green); position:relative;}
+  .phone-pill .pulse::after{
+    content:''; position:absolute; inset:-4px; border-radius:50%; border:1px solid var(--green);
+    animation:pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse{0%{transform:scale(0.6); opacity:1;} 100%{transform:scale(1.8); opacity:0;}}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px 22px; font-weight:600; font-size:14px; letter-spacing:0.02em;
+    border-radius:var(--radius); cursor:pointer; border:1px solid transparent;
+    transition:transform .15s ease, background .2s, border-color .2s;
+    font-family:'Inter';
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--orange); color:#181008;}
+  .btn-primary:hover{background:var(--orange-dim);}
+  .btn-ghost{border-color:var(--steel-line); color:var(--paper);}
+  .btn-ghost:hover{border-color:var(--orange-dim); color:var(--orange-dim);}
+  .menu-toggle{display:none; background:none; border:none; color:var(--paper); font-size:22px; cursor:pointer;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; padding:168px 0 90px; overflow:hidden;
+    background:
+      radial-gradient(ellipse at 15% -10%, rgba(255,106,26,0.14), transparent 55%),
+      var(--asphalt);
+  }
+  .hero-grid{
+    position:absolute; inset:0; opacity:0.5;
+    background-image:linear-gradient(var(--steel) 1px, transparent 1px), linear-gradient(90deg, var(--steel) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:linear-gradient(to bottom, black, transparent 85%);
+  }
+  .hero-inner{position:relative; z-index:2;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono'; font-size:12px; color:var(--orange-dim);
+    border:1px solid rgba(255,106,26,0.35); background:rgba(255,106,26,0.08);
+    padding:6px 12px; border-radius:var(--radius); margin-bottom:26px;
+  }
+  h1.headline{font-size:clamp(38px, 6vw, 74px); font-weight:700; max-width:780px;}
+  h1.headline .accent{color:var(--orange);}
+  .hero p.sub{
+    max-width:520px; margin-top:22px; color:var(--paper-dim); font-size:17px;
+  }
+  .hero-cta{display:flex; gap:16px; margin-top:36px; flex-wrap:wrap;}
+  .btn-lg{padding:16px 26px; font-size:15px;}
+
+  /* animated route line */
+  .route-map{
+    position:relative; margin-top:90px; height:110px;
+  }
+  .route-map svg{width:100%; height:100%; overflow:visible;}
+  .route-path{
+    fill:none; stroke:var(--steel-line); stroke-width:2; stroke-dasharray:2 10; stroke-linecap:round;
+  }
+  .route-progress{
+    fill:none; stroke:var(--orange); stroke-width:2; stroke-dasharray:600; stroke-dashoffset:600;
+    animation:draw 3.5s ease-in-out infinite;
+    stroke-linecap:round;
+  }
+  @keyframes draw{
+    0%{stroke-dashoffset:600;}
+    55%{stroke-dashoffset:0;}
+    100%{stroke-dashoffset:0;}
+  }
+  .route-point{
+    position:absolute; top:50%; transform:translateY(-50%);
+    font-family:'JetBrains Mono'; font-size:11px; color:var(--paper-dim);
+  }
+  .route-point.origin{left:0;}
+  .route-point.dest{right:0; text-align:right;}
+  .route-point .label{color:var(--paper); font-weight:600; display:block; margin-bottom:2px; font-size:12px;}
+  .route-point .pin{
+    width:9px; height:9px; border-radius:50%; background:var(--asphalt); border:2px solid var(--orange);
+    margin-bottom:8px;
+  }
+  .route-point.dest .pin{margin-left:auto;}
+  .truck-icon{
+    position:absolute; top:50%; font-size:20px; transform:translate(-50%,-58%);
+    offset-path:path('M2,55 C 260,-10 380,120 700,50 S 1050,-5 1178,55');
+    animation:drive 3.5s ease-in-out infinite;
+  }
+  @keyframes drive{
+    0%{offset-distance:0%; opacity:0;}
+    4%{opacity:1;}
+    55%{offset-distance:100%; opacity:1;}
+    58%{opacity:0;}
+    100%{offset-distance:100%; opacity:0;}
+  }
+
+  /* stat ticker */
+  .ticker{
+    border-top:1px solid var(--steel-line); border-bottom:1px solid var(--steel-line);
+    background:var(--asphalt-2);
+  }
+  .ticker-inner{
+    display:grid; grid-template-columns:repeat(4,1fr);
+    max-width:1180px; margin:0 auto;
+  }
+  .ticker-item{
+    padding:26px 24px; border-left:1px solid var(--steel-line);
+    text-align:left;
+  }
+  .ticker-item:first-child{border-left:none;}
+  .ticker-item .num{font-family:'Oswald'; font-size:30px; font-weight:600; color:var(--orange-dim);}
+  .ticker-item .lbl{font-size:12px; color:var(--paper-dim); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px;}
+
+  /* ---------- Section shell ---------- */
+  section{padding:110px 0;}
+  .section-head{max-width:600px; margin-bottom:64px;}
+  .section-head .route-rule{margin-bottom:18px; max-width:140px;}
+  .section-head h2{font-size:clamp(28px,4vw,42px); font-weight:600;}
+  .section-head p{color:var(--paper-dim); margin-top:16px; font-size:16px;}
+
+  /* ---------- Services ---------- */
+  .svc-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--steel-line); border:1px solid var(--steel-line);}
+  .svc-card{
+    background:var(--asphalt); padding:36px 30px; transition:background .25s;
+  }
+  .svc-card:hover{background:var(--asphalt-2);}
+  .svc-card .idx{font-family:'JetBrains Mono'; font-size:12px; color:var(--orange-dim); margin-bottom:22px; display:block;}
+  .svc-card h3{font-size:19px; font-weight:600; text-transform:none; letter-spacing:0; margin-bottom:10px; font-family:'Inter';}
+  .svc-card p{font-size:14.5px; color:var(--paper-dim);}
+
+  /* ---------- How it works ---------- */
+  .steps{position:relative;}
+  .step-row{
+    display:grid; grid-template-columns:120px 1fr; gap:30px;
+    padding:34px 0; border-top:1px solid var(--steel-line);
+    align-items:start;
+  }
+  .step-row:last-child{border-bottom:1px solid var(--steel-line);}
+  .step-num{font-family:'Oswald'; font-size:44px; font-weight:600; color:var(--steel-line);}
+  .step-body h3{font-family:'Inter'; text-transform:none; letter-spacing:0; font-size:20px; font-weight:600; margin-bottom:8px;}
+  .step-body p{color:var(--paper-dim); font-size:15px; max-width:560px;}
+
+  /* ---------- Why AX ---------- */
+  .why{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;}
+  .why-list{list-style:none; margin-top:30px; display:flex; flex-direction:column; gap:22px;}
+  .why-list li{display:flex; gap:16px; align-items:flex-start;}
+  .why-list .tick{
+    flex:none; width:22px; height:22px; border-radius:50%; background:rgba(61,220,132,0.12);
+    color:var(--green); display:flex; align-items:center; justify-content:center; font-size:13px; margin-top:2px;
+  }
+  .why-list strong{display:block; font-size:15.5px; margin-bottom:2px;}
+  .why-list span{color:var(--paper-dim); font-size:14px;}
+  .why-panel{
+    background:var(--asphalt-2); border:1px solid var(--steel-line); padding:36px;
+    position:relative;
+  }
+  .why-panel .quote-mark{font-family:'Oswald'; font-size:60px; color:var(--orange); line-height:0.5; opacity:0.7;}
+  .why-panel p.quote{font-size:18px; margin-top:18px; color:var(--paper); font-weight:400; line-height:1.6;}
+  .why-panel .who{margin-top:24px; font-family:'JetBrains Mono'; font-size:12.5px; color:var(--paper-dim);}
+  .why-panel .who strong{color:var(--paper);}
+
+  /* ---------- Testimonials ---------- */
+  .test-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .test-card{border:1px solid var(--steel-line); padding:28px; background:var(--asphalt-2);}
+  .test-card .stars{color:var(--yellow); font-size:13px; letter-spacing:2px; margin-bottom:16px;}
+  .test-card p{font-size:14.5px; color:var(--paper-dim); line-height:1.65;}
+  .test-card .who{margin-top:20px; font-size:13px; font-weight:600; color:var(--paper);}
+  .test-card .role{font-size:12px; color:var(--paper-dim); font-family:'JetBrains Mono';}
+
+  /* ---------- CTA / Contact ---------- */
+  .cta{
+    background:linear-gradient(160deg, var(--asphalt-2), var(--asphalt));
+    border-top:1px solid var(--steel-line); border-bottom:1px solid var(--steel-line);
+  }
+  .cta-inner{display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:center;}
+  .cta h2{font-size:clamp(28px,4vw,44px); font-weight:600;}
+  .cta p{color:var(--paper-dim); margin-top:16px; font-size:16px; max-width:460px;}
+  .contact-card{
+    background:var(--asphalt); border:1px solid var(--steel-line); padding:34px;
+  }
+  .contact-row{
+    display:flex; align-items:center; gap:16px; padding:16px 0; border-bottom:1px solid var(--steel-line);
+  }
+  .contact-row:last-of-type{border-bottom:none;}
+  .contact-row .ic{
+    width:38px; height:38px; flex:none; border:1px solid var(--steel-line); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:var(--orange-dim); font-size:16px;
+  }
+  .contact-row .lbl{font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--paper-dim); margin-bottom:2px;}
+  .contact-row .val{font-family:'JetBrains Mono'; font-size:15px; color:var(--paper);}
+  .contact-row a.val{transition:color .2s;}
+  .contact-row a.val:hover{color:var(--orange-dim);}
+  .hours-note{margin-top:22px; font-size:13px; color:var(--paper-dim); display:flex; gap:8px; align-items:center;}
+  .hours-note .pulse{width:7px; height:7px; border-radius:50%; background:var(--green); position:relative; flex:none;}
+  .hours-note .pulse::after{content:''; position:absolute; inset:-4px; border-radius:50%; border:1px solid var(--green); animation:pulse 1.8s ease-out infinite;}
+
+  /* ---------- Footer ---------- */
+  footer{padding:50px 0 34px;}
+  .foot-top{display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:30px; padding-bottom:40px;}
+  .foot-links{display:flex; gap:60px; flex-wrap:wrap;}
+  .foot-col h4{font-size:12px; letter-spacing:0.1em; color:var(--paper-dim); margin-bottom:14px; font-family:'Inter'; font-weight:600;}
+  .foot-col a{display:block; font-size:14px; color:var(--paper); margin-bottom:10px; opacity:0.85;}
+  .foot-col a:hover{color:var(--orange-dim);}
+  .foot-bottom{
+    display:flex; justify-content:space-between; align-items:center; padding-top:26px;
+    border-top:1px solid var(--steel-line); font-size:12.5px; color:var(--paper-dim); flex-wrap:wrap; gap:12px;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    nav.links{
+      display:none;
+      position:absolute; top:100%; left:0; right:0;
+      flex-direction:column; gap:0;
+      background:var(--asphalt-2); border-bottom:1px solid var(--steel-line);
+      padding:8px 24px;
+    }
+    nav.links.open{display:flex;}
+    nav.links a{padding:14px 0; border-bottom:1px solid var(--steel-line);}
+    nav.links a:last-child{border-bottom:none;}
+    .menu-toggle{display:block;}
+    .svc-grid, .test-grid{grid-template-columns:1fr;}
+    .why, .cta-inner{grid-template-columns:1fr;}
+    .ticker-inner{grid-template-columns:repeat(2,1fr);}
+    .ticker-item:nth-child(3){border-left:none;}
+    .step-row{grid-template-columns:60px 1fr;}
+    .step-num{font-size:32px;}
+    .phone-pill span.num-text{display:none;}
+  }
+  @media (max-width:560px){
+    .hero{padding:140px 0 60px;}
+    .route-map{display:none;}
+    section{padding:70px 0;}
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="#top" class="logo">
+      <span class="mark">AX</span>
+      <span>AX Logistics<span class="sub">DISPATCH SERVICES</span></span>
+    </a>
+    <nav class="links">
+      <a href="#services">Services</a>
+      <a href="#how">How It Works</a>
+      <a href="#why">Why AX</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a class="phone-pill" href="tel:+14043697516">
+        <span class="pulse"></span>
+        <span class="num-text">+1 (404) 369-7516</span>
+      </a>
+      <a class="btn btn-primary" href="#contact">Get Dispatched</a>
+      <button class="menu-toggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" style="padding-top:168px;">
+    <div class="hero-grid"></div>
+    <div class="wrap hero-inner">
+      <div class="eyebrow">● DISPATCH DESK LIVE — 24/7/365</div>
+      <h1 class="headline">Your truck runs.<br>We run the <span class="accent">dispatch</span>.</h1>
+      <p class="sub">AX Logistics LLC books your loads, negotiates your rates, and handles the paperwork — so owner-operators and small fleets spend more hours loaded and fewer hours on hold.</p>
+      <div class="hero-cta">
+        <a href="tel:+14043697516" class="btn btn-primary btn-lg">Call (404) 369-7516</a>
+        <a href="mailto:info.axdispatch@gmail.com" class="btn btn-ghost btn-lg">Email info.axdispatch@gmail.com</a>
+      </div>
+
+      <div class="route-map" aria-hidden="true">
+        <div class="route-point origin">
+          <span class="pin"></span>
+          <span class="label">Pickup</span>
+          <span>Load confirmed</span>
+        </div>
+        <div class="route-point dest">
+          <span class="pin"></span>
+          <span class="label">Delivery</span>
+          <span>Invoice sent</span>
+        </div>
+        <svg viewBox="0 0 1180 110" preserveAspectRatio="none">
+          <path class="route-path" d="M2,55 C 260,-10 380,120 700,50 S 1050,-5 1178,55"/>
+          <path class="route-progress" d="M2,55 C 260,-10 380,120 700,50 S 1050,-5 1178,55"/>
+        </svg>
+        <div class="truck-icon">🚛</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker">
+    <div class="ticker-inner wrap" style="padding-left:0; padding-right:0;">
+      <div class="ticker-item">
+        <div class="num mono">1,200+</div>
+        <div class="lbl">Loads Booked / Yr</div>
+      </div>
+      <div class="ticker-item">
+        <div class="num mono">&lt; 20 min</div>
+        <div class="lbl">Avg. Dispatch Response</div>
+      </div>
+      <div class="ticker-item">
+        <div class="num mono">24/7</div>
+        <div class="lbl">Desk Coverage</div>
+      </div>
+      <div class="ticker-item">
+        <div class="num mono">0</div>
+        <div class="lbl">Long-Term Contracts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="route-rule"><span class="dot"></span><span class="line"></span></div>
+        <h2>What the dispatch desk handles</h2>
+        <p>Everything between "truck is empty" and "truck is loaded and paid" — run by dispatchers who know your lanes.</p>
+      </div>
+      <div class="svc-grid">
+        <div class="svc-card">
+          <span class="idx mono">01</span>
+          <h3>Load Booking &amp; Rate Negotiation</h3>
+          <p>We source loads that match your lanes and equipment, then negotiate rates so you're not the one haggling with brokers.</p>
+        </div>
+        <div class="svc-card">
+          <span class="idx mono">02</span>
+          <h3>Route &amp; Fuel Planning</h3>
+          <p>Routing built around HOS limits, fuel stops, and weigh stations — fewer surprises, tighter delivery windows.</p>
+        </div>
+        <div class="svc-card">
+          <span class="idx mono">03</span>
+          <h3>Paperwork &amp; Invoicing</h3>
+          <p>Rate confirmations, BOLs, and invoices handled and filed for you, so nothing sits in a cab console for a week.</p>
+        </div>
+        <div class="svc-card">
+          <span class="idx mono">04</span>
+          <h3>Real-Time Load Tracking</h3>
+          <p>Your dispatcher tracks every load in transit and flags delays before the broker has to ask where you are.</p>
+        </div>
+        <div class="svc-card">
+          <span class="idx mono">05</span>
+          <h3>Broker &amp; Factoring Coordination</h3>
+          <p>We deal directly with brokers and your factoring company, keeping cash flow moving without you making the calls.</p>
+        </div>
+        <div class="svc-card">
+          <span class="idx mono">06</span>
+          <h3>24/7 Dispatch Support</h3>
+          <p>A dispatcher on call around the clock for detention, reschedules, breakdowns, or anything else the road throws at you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" style="background:var(--asphalt-2); border-top:1px solid var(--steel-line); border-bottom:1px solid var(--steel-line);">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="route-rule"><span class="dot"></span><span class="line"></span></div>
+        <h2>From onboarding to your first paid load</h2>
+        <p>Four steps, in order — this is the exact sequence a new truck goes through with AX.</p>
+      </div>
+      <div class="steps">
+        <div class="step-row">
+          <div class="step-num mono">01</div>
+          <div class="step-body">
+            <h3>Onboard your truck</h3>
+            <p>Send your MC/DOT authority, insurance, and equipment details. Most trucks are set up and ready for their first load within a day.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num mono">02</div>
+          <div class="step-body">
+            <h3>We source and negotiate loads</h3>
+            <p>Your dispatcher builds a lane plan around your preferences and starts negotiating rate confirmations on your behalf.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num mono">03</div>
+          <div class="step-body">
+            <h3>You drive, we handle the rest</h3>
+            <p>Paperwork, tracking, and broker check-calls are covered from your desk while you focus on the road.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num mono">04</div>
+          <div class="step-body">
+            <h3>Get paid</h3>
+            <p>Invoices go out the moment a load delivers, coordinated directly with your factoring company or broker terms.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY AX -->
+  <section id="why">
+    <div class="wrap why">
+      <div>
+        <div class="route-rule" style="max-width:140px; margin-bottom:18px;"><span class="dot"></span><span class="line"></span></div>
+        <h2 style="font-size:clamp(26px,3.6vw,38px); font-weight:600;">Built for owner-operators, not call centers</h2>
+        <ul class="why-list">
+          <li>
+            <span class="tick">✓</span>
+            <div><strong>One dedicated dispatcher</strong><span>You get a direct line to the person booking your loads — not a rotating queue.</span></div>
+          </li>
+          <li>
+            <span class="tick">✓</span>
+            <div><strong>No long-term contracts</strong><span>Stay because it's working, not because you signed something that locks you in.</span></div>
+          </li>
+          <li>
+            <span class="tick">✓</span>
+            <div><strong>Transparent, flat dispatch fee</strong><span>You'll always know exactly what AX takes and why, before the load is booked.</span></div>
+          </li>
+          <li>
+            <span class="tick">✓</span>
+            <div><strong>Support that answers at 2am</strong><span>Breakdowns and reschedules don't wait for business hours, and neither do we.</span></div>
+          </li>
+        </ul>
+      </div>
+      <div class="why-panel">
+        <div class="quote-mark">"</div>
+        <p class="quote">Send us your authority and your preferred lanes — we'll have your dispatcher on the phone the same day and your first load confirmed within 48 hours.</p>
+        <div class="who">— AX LOGISTICS ONBOARDING TEAM</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="route-rule"><span class="dot"></span><span class="line"></span></div>
+        <h2>What carriers say</h2>
+        <p>Sample carrier feedback — swap in your own reviews once you're live.</p>
+      </div>
+      <div class="test-grid">
+        <div class="test-card">
+          <div class="stars">★★★★★</div>
+          <p>My dispatcher actually knows my lanes. Rate confirmations come through before I've even finished my coffee.</p>
+          <div class="who">Owner-Operator</div>
+          <div class="role mono">DRY VAN · TX</div>
+        </div>
+        <div class="test-card">
+          <div class="stars">★★★★★</div>
+          <p>Paperwork used to eat my evenings. Now it's handled before I've hit the next state line.</p>
+          <div class="who">Fleet Owner, 3 Trucks</div>
+          <div class="role mono">REEFER · GA</div>
+        </div>
+        <div class="test-card">
+          <div class="stars">★★★★★</div>
+          <p>No contract, no pressure — I stayed because the loads and the rates kept getting better.</p>
+          <div class="who">Owner-Operator</div>
+          <div class="role mono">FLATBED · OH</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / CONTACT -->
+  <section id="contact" class="cta">
+    <div class="wrap cta-inner">
+      <div>
+        <h2>Ready to hand off the dispatch desk?</h2>
+        <p>Call or email AX Logistics LLC and we'll walk your truck through onboarding — most carriers are running their first booked load within 48 hours.</p>
+      </div>
+      <div class="contact-card">
+        <div class="contact-row">
+          <div class="ic">☎</div>
+          <div>
+            <div class="lbl">Call the dispatch desk</div>
+            <a class="val" href="tel:+14043697516">+1 (404) 369-7516</a>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="ic">✉</div>
+          <div>
+            <div class="lbl">Email</div>
+            <a class="val" href="mailto:info.axdispatch@gmail.com">info.axdispatch@gmail.com</a>
+          </div>
+        </div>
+        <div class="hours-note"><span class="pulse"></span> Dispatch desk staffed 24 hours a day, 5 days a week</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <a href="#top" class="logo">
+        <span class="mark">AX</span>
+        <span>AX Logistics<span class="sub">DISPATCH SERVICES</span></span>
+      </a>
+      <div class="foot-links">
+        <div class="foot-col">
+          <h4>COMPANY</h4>
+          <a href="#services">Services</a>
+          <a href="#how">How It Works</a>
+          <a href="#why">Why AX</a>
+        </div>
+        <div class="foot-col">
+          <h4>CONTACT</h4>
+          <a href="tel:+14043697516">+1 (404) 369-7516</a>
+          <a href="mailto:info.axdispatch@gmail.com">info.axdispatch@gmail.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 AX Logistics LLC. All rights reserved.</span>
+      <span class="mono">MC/DOT ON REQUEST</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
