@@ -313,6 +313,31 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
 .rate-note{text-align:center;margin-top:30px;color:var(--muted);font-size:14.5px}
 .rate-cta{text-align:center;margin-top:22px}
 
+
+/* ===== mobile header fix ===== */
+.btn{white-space:nowrap}
+.brand{flex:none}
+.nav-actions{flex:none}
+.t-short{display:none}
+@media (max-width:520px){
+  .nav{gap:10px;height:68px}
+  .site-header.scrolled .nav{height:60px}
+  .menu{top:68px}
+  .site-header.scrolled .menu{top:60px}
+  .brand img{height:38px}
+  .site-header.scrolled .brand img{height:34px}
+  .nav-actions{gap:10px}
+  .nav-cta{padding:9px 15px;font-size:13px}
+  .t-long{display:none}
+  .t-short{display:inline}
+  .burger{width:38px;height:38px}
+}
+@media (max-width:350px){
+  .brand img{height:32px}
+  .site-header.scrolled .brand img{height:30px}
+  .nav-cta{padding:8px 12px;font-size:12.5px}
+  .container{width:min(1180px,100% - 32px)}
+}
 </style>
 <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -343,7 +368,7 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
         <span class="live-dot"></span>
         <span class="phone-text">(434) 202-4236</span>
       </a>
-      <a href="#contact" class="btn btn-primary btn-sm">Get Dispatched</a>
+      <a href="#contact" class="btn btn-primary btn-sm nav-cta"><span class="t-long">Get Dispatched</span><span class="t-short">Get Started</span></a>
       <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
         <span></span><span></span><span></span>
       </button>
