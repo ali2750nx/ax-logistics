@@ -303,13 +303,8 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
 }
 
 /* trucks & rates */
-.rate-card{position:relative;display:flex;flex-direction:column;padding:32px 26px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:var(--radius);transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-top-color .4s}
-.rate-card:hover{transform:translateY(-10px);box-shadow:var(--shadow-lg);border-top-color:var(--black)}
 .rate-tag{align-self:flex-start;padding:5px 12px;border-radius:999px;background:#e6f1ff;color:var(--blue);font-size:12px;font-weight:700;margin-bottom:16px}
-.rate-card h3{font-size:28px;font-style:italic;text-transform:uppercase;font-weight:800}
-.rate-card p{margin-top:10px;color:var(--muted);font-size:15px;flex:1}
 .rate{margin-top:22px;font-family:'Barlow Condensed',sans-serif;font-style:italic;font-weight:800;font-size:68px;line-height:1;background:linear-gradient(95deg,var(--blue-light),var(--navy));-webkit-background-clip:text;background-clip:text;color:transparent}
-.rate-card small{margin-top:4px;font-size:12.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
 .rate-note{text-align:center;margin-top:30px;color:var(--muted);font-size:14.5px}
 .rate-cta{text-align:center;margin-top:22px}
 
@@ -337,6 +332,36 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
   .site-header.scrolled .brand img{height:30px}
   .nav-cta{padding:8px 12px;font-size:12.5px}
   .container{width:min(1180px,100% - 32px)}
+}
+
+
+/* rate cards: 2 trucks per card, cards side by side */
+.rate-rows{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
+.rate-row{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:box-shadow .4s var(--ease),transform .4s var(--ease)}
+.rate-row:hover{box-shadow:var(--shadow-lg);transform:translateY(-6px)}
+.rate-half{position:relative;flex:1;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:30px 26px;transition:background .35s}
+.rate-half+.rate-half{border-top:1px solid var(--line)}
+.rate-half::before{content:'';position:absolute;left:0;top:22%;bottom:22%;width:4px;border-radius:0 4px 4px 0;background:var(--blue);transition:top .35s var(--ease),bottom .35s var(--ease),background .35s}
+.rate-half:hover{background:var(--bg-soft)}
+.rate-half:hover::before{top:0;bottom:0;background:var(--black)}
+.rate-info{min-width:0}
+.rate-info h3{font-size:25px;font-style:italic;text-transform:uppercase;font-weight:800;margin-top:10px}
+.rate-info p{margin-top:6px;color:var(--muted);font-size:14.5px}
+.rate-fig{flex:none;text-align:right}
+.rate-fig .rate{margin-top:0;font-size:56px}
+.rate-fig small{display:block;margin-top:4px;font-size:11.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.rate-half.cta-half{flex-direction:column;align-items:flex-start;justify-content:center;gap:18px;background:linear-gradient(135deg,var(--black),#12306b);color:#fff}
+.rate-half.cta-half:hover{background:linear-gradient(135deg,var(--black),#12306b)}
+.rate-half.cta-half::before{display:none}
+.rate-half.cta-half h3{color:#fff}
+.rate-half.cta-half p{color:#b9c4d8}
+@media (max-width:1020px){
+  .rate-rows{grid-template-columns:1fr;max-width:560px;margin-inline:auto}
+}
+@media (max-width:480px){
+  .rate-half{padding:22px 20px}
+  .rate-fig .rate{font-size:46px}
+  .rate-info h3{font-size:22px}
 }
 </style>
 <script>document.documentElement.classList.add('js');</script>
@@ -479,35 +504,76 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
       <h2>Trucks we dispatch &amp; our fees</h2>
       <p>Simple, upfront pricing. One percentage per truck type — no hidden charges and no long-term contracts.</p>
     </div>
-    <div class="grid grid-4">
-      <article class="rate-card" data-reveal style="--d:0ms">
-        <span class="rate-tag">Fast &amp; flexible</span>
-        <h3>Hotshot</h3>
-        <p>Quick-turn, smaller freight on pickup and gooseneck setups.</p>
-        <div class="rate"><span data-count="6" data-suffix="%">6%</span></div>
-        <small>dispatch fee</small>
-      </article>
-      <article class="rate-card" data-reveal style="--d:80ms">
-        <span class="rate-tag">Temp-controlled</span>
-        <h3>Reefer</h3>
-        <p>Refrigerated freight booked with rates that cover the extra cost of running cold.</p>
-        <div class="rate"><span data-count="7" data-suffix="%">7%</span></div>
-        <small>dispatch fee</small>
-      </article>
-      <article class="rate-card" data-reveal style="--d:160ms">
-        <span class="rate-tag">Standard freight</span>
-        <h3>Dry Van</h3>
-        <p>Standard 53′ freight with steady lanes and dependable brokers.</p>
-        <div class="rate"><span data-count="7" data-suffix="%">7%</span></div>
-        <small>dispatch fee</small>
-      </article>
-      <article class="rate-card" data-reveal style="--d:240ms">
-        <span class="rate-tag">Drop &amp; hook</span>
-        <h3>Power Only &amp; Sprinters</h3>
-        <p>Power-only trailer pulls and sprinter vans, booked and kept moving.</p>
-        <div class="rate"><span data-count="8" data-suffix="%">8%</span></div>
-        <small>dispatch fee</small>
-      </article>
+    <div class="rate-rows">
+      <div class="rate-row" data-reveal style="--d:0ms">
+        <div class="rate-half">
+          <div class="rate-info">
+            <span class="rate-tag">Standard freight</span>
+            <h3>Dry Van</h3>
+            <p>Standard 53′ freight, steady lanes.</p>
+          </div>
+          <div class="rate-fig">
+            <div class="rate"><span data-count="5" data-suffix="%">5%</span></div>
+            <small>dispatch fee</small>
+          </div>
+        </div>
+        <div class="rate-half">
+          <div class="rate-info">
+            <span class="rate-tag">Temp-controlled</span>
+            <h3>Reefer</h3>
+            <p>Refrigerated freight, rates that cover cold.</p>
+          </div>
+          <div class="rate-fig">
+            <div class="rate"><span data-count="5" data-suffix="%">5%</span></div>
+            <small>dispatch fee</small>
+          </div>
+        </div>
+      </div>
+      <div class="rate-row" data-reveal style="--d:80ms">
+        <div class="rate-half">
+          <div class="rate-info">
+            <span class="rate-tag">Drop &amp; hook</span>
+            <h3>Power Only &amp; Sprinters</h3>
+            <p>Trailer pulls and sprinter vans.</p>
+          </div>
+          <div class="rate-fig">
+            <div class="rate"><span data-count="5" data-suffix="%">5%</span></div>
+            <small>dispatch fee</small>
+          </div>
+        </div>
+        <div class="rate-half">
+          <div class="rate-info">
+            <span class="rate-tag">Fast &amp; flexible</span>
+            <h3>Hotshot</h3>
+            <p>Quick-turn, smaller freight.</p>
+          </div>
+          <div class="rate-fig">
+            <div class="rate"><span data-count="7" data-suffix="%">7%</span></div>
+            <small>dispatch fee</small>
+          </div>
+        </div>
+      </div>
+      <div class="rate-row" data-reveal style="--d:160ms">
+        <div class="rate-half">
+          <div class="rate-info">
+            <span class="rate-tag">Expedited &amp; local</span>
+            <h3>Box Truck</h3>
+            <p>Time-sensitive and local freight.</p>
+          </div>
+          <div class="rate-fig">
+            <div class="rate"><span data-count="8" data-suffix="%">8%</span></div>
+            <small>dispatch fee</small>
+          </div>
+        </div>
+        <div class="rate-half cta-half">
+          <div class="rate-info">
+            <span class="rate-tag">Not sure?</span>
+            <h3>Other truck type?</h3>
+            <p>Tell us what you run and we’ll quote you a fee.</p>
+          </div>
+          <a href="tel:+14342024236" class="btn btn-primary btn-sm">Call us</a>
+        </div>
+      </div>
     </div>
     <p class="rate-note" data-reveal>Fees are a percentage of each load’s gross rate and are explained before any load is booked.</p>
     <div class="rate-cta" data-reveal><a href="#contact" class="btn btn-primary btn-lg">Get started today</a></div>
@@ -555,7 +621,7 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
     <div class="grid grid-4">
       <div class="why-card" data-reveal style="--d:0ms"><div class="why-no">01</div><h3>One dedicated dispatcher</h3><p>A direct line to the person booking your loads — not a rotating queue.</p></div>
       <div class="why-card" data-reveal style="--d:80ms"><div class="why-no">02</div><h3>No long-term contracts</h3><p>Stay because it’s working, not because you’re locked in.</p></div>
-      <div class="why-card" data-reveal style="--d:160ms"><div class="why-no">03</div><h3>Simple, upfront fees</h3><p>Just 6% to 8% depending on your truck — you know it before the load is booked.</p></div>
+      <div class="why-card" data-reveal style="--d:160ms"><div class="why-no">03</div><h3>Simple, upfront fees</h3><p>Just 5% to 8% depending on your truck — you know it before the load is booked.</p></div>
       <div class="why-card" data-reveal style="--d:240ms"><div class="why-no">04</div><h3>Answers at 2 a.m.</h3><p>Breakdowns and reschedules don’t keep office hours, and neither do we.</p></div>
     </div>
   </div>
@@ -565,8 +631,8 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
 <section class="coverage" aria-label="Coverage">
   <div class="marquee">
     <div class="track">
-      <span>Nationwide Coverage</span><i></i><span>Hotshot</span><i></i><span>Reefer</span><i></i><span>Dry Van</span><i></i><span>Power Only</span><i></i><span>Sprinters</span><i></i>
-      <span>Nationwide Coverage</span><i></i><span>Hotshot</span><i></i><span>Reefer</span><i></i><span>Dry Van</span><i></i><span>Power Only</span><i></i><span>Sprinters</span><i></i>
+      <span>Nationwide Coverage</span><i></i><span>Dry Van</span><i></i><span>Reefer</span><i></i><span>Power Only</span><i></i><span>Sprinters</span><i></i><span>Hotshot</span><i></i><span>Box Truck</span><i></i>
+      <span>Nationwide Coverage</span><i></i><span>Dry Van</span><i></i><span>Reefer</span><i></i><span>Power Only</span><i></i><span>Sprinters</span><i></i><span>Hotshot</span><i></i><span>Box Truck</span><i></i>
     </div>
   </div>
 </section>
@@ -617,11 +683,11 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
       </div>
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">How much does dispatch cost?<span class="plus"></span></button>
-        <div class="faq-a"><div><p>Our fee is a percentage of the load’s gross rate: Hotshot 6%, Reefer 7%, Dry Van 7% and Power Only / Sprinters 8%. It’s explained up front, before any load is booked.</p></div></div>
+        <div class="faq-a"><div><p>Our fee is a percentage of the load’s gross rate: Dry Van, Reefer and Power Only / Sprinters 5%, Hotshot 7% and Box Truck 8%. It’s explained up front, before any load is booked.</p></div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">Which trucks do you dispatch?<span class="plus"></span></button>
-        <div class="faq-a"><div><p>Hotshot, reefer, dry van, and power only / sprinter vans — for owner-operators and small fleets.</p></div></div>
+        <div class="faq-a"><div><p>Dry van, reefer, power only / sprinter vans, hotshot and box truck — for owner-operators and small fleets.</p></div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">How fast can I get my first load?<span class="plus"></span></button>
@@ -665,7 +731,7 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
       <div class="row">
         <label>Truck type
           <select name="equipment">
-            <option>Hotshot</option><option>Reefer</option><option>Dry Van</option><option>Power Only</option><option>Sprinter Van</option>
+            <option>Dry Van</option><option>Reefer</option><option>Power Only</option><option>Sprinter Van</option><option>Hotshot</option><option>Box Truck</option>
           </select>
         </label>
         <label>Trucks
