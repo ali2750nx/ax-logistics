@@ -649,7 +649,7 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
       </div>
       <label>Message<textarea name="message" rows="4" placeholder="Tell us about your lanes and preferences"></textarea></label>
       <button type="submit" class="btn btn-primary btn-lg full">Send request</button>
-      <p class="form-note" id="formNote">This opens your email app with the request ready to send.</p>
+      <p class="form-note" id="formNote">Your request goes straight to our dispatch desk.</p>
     </form>
   </div>
 </section>
@@ -789,9 +789,14 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
     });
   });
 
-  /* ---- contact form -> opens email app ---- */
+  /* ---- contact form -> sends to info.axdispatch@gmail.com via Web3Forms ---- */
+  // Paste your free Web3Forms access key between the quotes (see steps from Claude)
+  var WEB3FORMS_KEY = 'PASTE_YOUR_ACCESS_KEY_HERE';
+
   var form = document.getElementById('contactForm');
   var note = document.getElementById('formNote');
+  var sendBtn = form.querySelector('button[type="submit"]');
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var name = form.name.value.trim();
@@ -804,18 +809,49 @@ a.contact-item:hover{transform:translateX(8px);box-shadow:var(--shadow);border-c
     });
     if (!ok) { note.textContent = 'Please add your name and phone number.'; return; }
 
-    var body =
-      'Name: ' + name + '\n' +
+    var message =
       'Phone: ' + phone + '\n' +
-      'Email: ' + form.email.value.trim() + '\n' +
-      'Equipment: ' + form.equipment.value + '\n' +
-      'Trucks: ' + form.trucks.value + '\n\n' +
+      'Truck type: ' + form.equipment.value + '\n' +
+      'Number of trucks: ' + form.trucks.value + '\n\n' +
       'Message:\n' + form.message.value.trim();
-    var url = 'mailto:info.axdispatch@gmail.com' +
-      '?subject=' + encodeURIComponent('Dispatch request from ' + name) +
-      '&body=' + encodeURIComponent(body);
-    note.textContent = 'Opening your email app… if nothing opens, call (434) 202-4236.';
-    window.location.href = url;
+
+    // Fallback if the key has not been added yet: open the visitor's email app
+    if (!WEB3FORMS_KEY || WEB3FORMS_KEY.indexOf('PASTE_') === 0) {
+      window.location.href = 'mailto:info.axdispatch@gmail.com' +
+        '?subject=' + encodeURIComponent('Dispatch request from ' + name) +
+        '&body=' + encodeURIComponent('Name: ' + name + '\n' + message);
+      return;
+    }
+
+    var label = sendBtn.textContent;
+    sendBtn.disabled = true; sendBtn.textContent = 'Sending…';
+    note.textContent = '';
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject: 'New dispatch request from ' + name,
+        from_name: 'AX Logistics Website',
+        name: name,
+        email: form.email.value.trim(),
+        message: message
+      })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (data.success) {
+        form.reset();
+        note.textContent = '✓ Thank you! Your request was sent. We will call you shortly.';
+        note.style.color = '#16a34a';
+      } else { throw new Error(data.message || 'failed'); }
+    })
+    .catch(function () {
+      note.style.color = '#e5484d';
+      note.textContent = 'Could not send. Please call (434) 202-4236 or email info.axdispatch@gmail.com.';
+    })
+    .finally(function () { sendBtn.disabled = false; sendBtn.textContent = label; });
   });
   form.querySelectorAll('input').forEach(function (i) {
     i.addEventListener('input', function () { i.classList.remove('err'); });
